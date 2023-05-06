@@ -18,6 +18,27 @@ class TestWorkflow:
         assert workflow.rulesets[0].name is "TestRuleset"
         assert workflow.rulesets[0].rules[0].value is "test"
 
+    def test_add_task_op(self):
+        first_task = PromptTask("test1")
+        second_task = PromptTask("test2")
+
+        workflow = Workflow(
+            prompt_driver=MockDriver()
+        )
+
+        workflow + first_task
+        workflow + second_task
+
+        assert len(workflow.tasks) == 2
+        assert first_task in workflow.tasks
+        assert second_task in workflow.tasks
+        assert first_task.structure == workflow
+        assert second_task.structure == workflow
+        assert len(first_task.parents) == 0
+        assert len(first_task.children) == 0
+        assert len(second_task.parents) == 0
+        assert len(second_task.children) == 0
+
     def test_add_task(self):
         first_task = PromptTask("test1")
         second_task = PromptTask("test2")
